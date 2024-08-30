@@ -7,7 +7,8 @@
 #include <pico/stdlib.h>
 
 namespace {
-const uint32_t storage_offset = PICO_FLASH_SIZE_BYTES - FLASH_SECTOR_SIZE; // last sector
+const uint32_t sectors_from_end = 2;
+const uint32_t storage_offset = PICO_FLASH_SIZE_BYTES - sectors_from_end * FLASH_SECTOR_SIZE; // penultimate sector, final one doesnt persist data for some reason
 const uint8_t* storage_address = reinterpret_cast<uint8_t*>(XIP_BASE + storage_offset);
 } // namespace
 

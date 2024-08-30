@@ -26,10 +26,12 @@ int main() {
   LED led(PICO_DEFAULT_LED_PIN);
 
   std::vector<uint8_t> data;
-  data.reserve(250);
-  std::generate_n(std::back_inserter(data), 250, [n = 0]() mutable { return n++; });
-  // std::generate(v.begin(), v.end(), [);
-  for (uint8_t i = 0; i < data.size(); ++i) {
+  // this also triggers the crash below
+  // data.reserve(250);
+  // std::generate_n(std::back_inserter(data), 250, [n = 0]() mutable { return n++; });
+  // this doesn't
+  data.resize(250);
+  for (uint8_t i = 0; i < 250; ++i) {
     data[i] = i;
   }
 
@@ -43,7 +45,7 @@ int main() {
   // flash::write(hash);
 
   for (uint32_t i = 0;; ++i) {
-    printf("Hello from %s (%d)\n", arch, i);
+    printf("Hello from %s (%d) flash_size=%08x xip_base=%08x\n", arch, i, PICO_FLASH_SIZE_BYTES, XIP_BASE);
     for (uint8_t byte : data) {
       printf("%02x", byte);
     }
