@@ -9,13 +9,9 @@ public:
     gpio_set_dir(m_pin, GPIO_OUT);
   }
 
-  void on() const {
-    gpio_put(m_pin, 1);
-  }
+  void on() const { gpio_put(m_pin, 1); }
 
-  void off() const {
-    gpio_put(m_pin, 0);
-  }
+  void off() const { gpio_put(m_pin, 0); }
 
 private:
   int m_pin;
