@@ -7,21 +7,20 @@ minicom -b 115200 -D /dev/ttyACM0
 ```
 
 Also:
-- reproducible example of RISC-V crash (board resets into bootsel mode when you run it)
-- example of writing to flash memory (which *is* not preserved through a reboot (or power cycle?)). For some reason the final block doesnt preserve the data, but the penultimate one does.
+- example of writing to flash memory (which *is* preserved through a uf2 load). For some reason (probably bootrom errata E10, see datasheet) the final block doesn't preserve the data, but the penultimate one (and presumably all the others) does.
 
 Build system avoids using the buggy and unreliable (as of Aug 24) pico vscode plugin (it's still in dev apparently).
 
-RISC-V toolchain can be found [here](https://www.embecosm.com/resources/tool-chain-downloads/#riscv-stable)
+RISC-V toolchain can be found [here](https://github.com/raspberrypi/pico-sdk-tools/releases/). NB Avoid the builds at https://www.embecosm.com/resources/tool-chain-downloads/#riscv-stable, binaries produced by them can reset the board.
 
-Works with `arm-none-eabi-gcc` 10.3 (ubuntu 22 default) and 13.2
+ARM build works with `arm-none-eabi-gcc` 10.3 (ubuntu 22 default) and 13.2. `riscv32-unknown-elf-gcc` from above is 14.2.1.
 
 See CMakeLists.txt:
 
 - Set values `PICO_SDK_PATH` and `PICO_TOOLCHAIN_PATH`  appropriately
 - Generate Makefile using either
-  - `cmake -DPICO_PLATFORM=rp2350-arm-s`, or
-  - `cmake -DPICO_PLATFORM=rp2350-riscv`
+  - `cd build && cmake -DPICO_PLATFORM=rp2350-arm-s ..`, or
+  - `cd build && cmake -DPICO_PLATFORM=rp2350-riscv ..`
 
 ## See also
 

@@ -1,8 +1,8 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(PICO_SDK_PATH ../../pico-sdk) # release 2.0.0 doesnt work (with TinyUSB 0.16)
@@ -16,7 +16,7 @@ if (${PICO_PLATFORM} STREQUAL "rp2350-arm-s")
   # set(PICO_TOOLCHAIN_PATH /usr)
   set(PICO_TOOLCHAIN_PATH /opt/arm-gcc-13.2)
 elseif (${PICO_PLATFORM} STREQUAL "rp2350-riscv")
-  set(PICO_TOOLCHAIN_PATH /opt/riscv32-embecosm-ubuntu2204-gcc13.2.0)
+  set(PICO_TOOLCHAIN_PATH /opt/riscv-gcc-14)
 else()
   message(FATAL_ERROR "Specify PICO_PLATFORM: either rp2350-arm-s or rp2350-riscv")
 endif()
