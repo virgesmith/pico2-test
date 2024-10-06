@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "pico/unique_id.h"
 #include "hardware/uart.h"
 #include "hardware/gpio.h"
 #include "hardware/spi.h"
@@ -47,9 +48,11 @@ uint32_t millis() {
   return to_us_since_boot(get_absolute_time()) / 1000;
 }
 
-bool wifi_connect(std::string network, std::string password, IPAddress dns_server, uint32_t timeout=10000) {
-  printf("Connecting to %s...\n", network.c_str());
+bool wifi_connect(const std::string& hostname, std::string network, std::string password, IPAddress dns_server, uint32_t timeout=10000) {
+  printf("Connecting %s to %s...\n", hostname.c_str(), network.c_str());
+
   wireless.wifi_set_passphrase(network, password);
+  wireless.set_hostname(hostname);
 
   uint32_t t_start = millis();
 
@@ -175,12 +178,18 @@ bool poll_http_requests(uint8_t server_sock, http_request_handler request_handle
 int main() {
   stdio_init_all();
 
+  pico_unique_board_id_t board_id;
+  pico_get_unique_board_id(&board_id);
+  char hostname[20] = {0};
+  snprintf(hostname, sizeof(hostname) - 1, "pico2-%02x%02x%02x%02x%02x", board_id.id[3], board_id.id[4], board_id.id[5],
+           board_id.id[6], board_id.id[7]);
+
   wireless.init();
   sleep_ms(500);
 
   printf("Firmware version Nina %s\n", wireless.get_fw_version());
 
-  if(!wifi_connect(NETWORK, PASSWORD, USE_DNS)) {
+  if(!wifi_connect(std::string(hostname), NETWORK, PASSWORD, USE_DNS)) {
     return 0;
   }
 
