@@ -1,8 +1,9 @@
-#include "flash.h"
+//#include "flash.h"
 #include "led.h"
 #include "sha256.h"
 
 #include "pico/stdlib.h"
+#include "pico/rand.h"
 
 #include <algorithm>
 
@@ -14,6 +15,7 @@ const char* arch = "RISC-V Hazard 3";
 #else
 const char* arch = "ARM Cortex M33";
 #endif
+
 
 int main() {
   stdio_init_all();
@@ -29,7 +31,7 @@ int main() {
   // flash::write(hash);
 
   for (uint32_t i = 0;; ++i) {
-    printf("Hello from %s (%d) flash_size=%08x xip_base=%08x\n", arch, i, PICO_FLASH_SIZE_BYTES, XIP_BASE);
+    printf("Hello from %s (%d) random=%u\n", arch, i, get_rand_32());
     for (uint8_t byte : data) {
       printf("%02x", byte);
     }
@@ -38,11 +40,11 @@ int main() {
       printf("%02x", byte);
     }
     printf("\n");
-    auto f = flash::read(32);
-    for (uint8_t byte : f) {
-      printf("%02x", byte);
-    }
-    printf("\n");
+    // auto f = flash::read(32);
+    // for (uint8_t byte : f) {
+    //   printf("%02x", byte);
+    // }
+    // printf("\n");
     sleep_ms(750);
     led.on();
     sleep_ms(250);
